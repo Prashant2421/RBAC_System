@@ -1,0 +1,26 @@
+{
+  "name": "rbac_system",
+  "version": "1.0.0",
+  "description": "A secure Node.js REST API demonstrating role-based access control with JWT authentication, bcrypt password hashing, MongoDB, Express, and protected user roles.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node --test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://localhost:26831/Prashant2421/RBAC_System"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3"
+  },
+  "devDependencies": {
+    "supertest": "^7.3.1"
+  }
+}
