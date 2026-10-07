@@ -1,12 +1,20 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const rateLimit = require("express-rate-limit");
 
 const app = express();
 app.use(express.json());
 
 const users = new Map();
 const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-change-me";
+const authRateLimit = rateLimit({
+  windowMs: 60 * 1000,
+  limit: 60,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+  message: { message: "Too many requests" },
+});
 
 const createToken = (user) =>
   jwt.sign({ username: user.username, role: user.role }, JWT_SECRET, {
@@ -65,14 +73,16 @@ app.post("/login", async (req, res) => {
   return res.json({ token: createToken(user) });
 });
 
-app.get("/profile", authenticateToken, (req, res) => {
+app.get("/profile", authRateLimit, authenticateToken, (req, res) => {
   return res.json({ username: req.user.username, role: req.user.role });
 });
 
-app.get("/admin", authenticateToken, authorizeRoles("admin"), (req, res) => {
+app.get("/admin", authRateLimit, authenticateToken, authorizeRoles("admin"), (req, res) => {
   return res.json({ message: "Welcome admin" });
 });
 
-const resetUsers = () => users.clear();
+const resetUsers = () => {
+  users.clear();
+};
 
 module.exports = { app, resetUsers };
